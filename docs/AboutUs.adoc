@@ -29,7 +29,7 @@ Responsibilities: Command Suggestions
 
 === Alvin Ng
 image::alvinnyk.png[width="150", align="left"]
-{empty}[http://github.com/Alvinnyk[github]] [<<alvinnyk#, portfolio>>]
+{empty}[https://github.com/Alvinnyk[github]] [<<alvinnyk#, portfolio>>]
 
 Role: Documentation, In charge of `Model` +
 Responsibilities: Free time identification, NUSMods API usage
@@ -38,7 +38,7 @@ Responsibilities: Free time identification, NUSMods API usage
 
 === Marcus Ong
 image::marqueurs404.png[width="150", align="left"]
-{empty}[http://github.com/marqueurs404[github]] [<<marqueurs404#, portfolio>>]
+{empty}[https://github.com/marqueurs404[github]] [<<marqueurs404#, portfolio>>]
 
 Role: Integration, In charge of `Storage` +
 Responsibilities: (De)serialization
@@ -47,7 +47,7 @@ Responsibilities: (De)serialization
 
 === Klement Tan
 image::klementtan.png[width="150", align="left"]
-{empty}[http://github.com/klementtan[github]] [<<klementtan#, portfolio>>]
+{empty}[https://github.com/klementtan[github]] [<<klementtan#, portfolio>>]
 
 Role: Team Lead, In charge of `Storage` +
 Responsibilities: Free location suggestion, Google Maps API usage
@@ -56,7 +56,7 @@ Responsibilities: Free location suggestion, Google Maps API usage
 
 === Lim Yi Jie
 image::yijiee.png[width="150", align="left"]
-{empty}[http://github.com/YiJiee[github]] [<<yijiee#, portfolio>>]
+{empty}[https://github.com/YiJiee[github]] [<<yijiee#, portfolio>>]
 
 Role: Code Quality +
 Responsibilities: Schedule display
