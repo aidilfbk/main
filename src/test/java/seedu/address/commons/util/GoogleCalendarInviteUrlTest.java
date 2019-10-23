@@ -17,11 +17,15 @@ class GoogleCalendarInviteUrlTest {
 
     private static final ZoneId SINGAPORE_TIMEZONE = ZoneId.of("Asia/Singapore");
 
-    private static final ZonedDateTime VALID_START_TIME = ZonedDateTime.of(2019, 12, 31, 0, 0, 0, 0, SINGAPORE_TIMEZONE);
+    private static final ZonedDateTime VALID_START_TIME = ZonedDateTime.of(
+            2019, 12, 31, 0, 0, 0, 0, SINGAPORE_TIMEZONE);
     private static final String ENCODED_VALID_START_TIME = "20191230T160000Z";
-    private static final ZonedDateTime VALID_END_TIME = ZonedDateTime.of(2019, 12, 31, 23, 59, 59, 0, SINGAPORE_TIMEZONE);
+
+    private static final ZonedDateTime VALID_END_TIME = ZonedDateTime.of(
+            2019, 12, 31, 23, 59, 59, 0, SINGAPORE_TIMEZONE);
     private static final String ENCODED_VALID_END_TIME = "20191231T155959Z";
     private static final String ENCODED_VALID_DATES = ENCODED_VALID_START_TIME + "%2F" + ENCODED_VALID_END_TIME;
+
     private static final String VALID_DATES_QUERYPARAM = "dates=" + ENCODED_VALID_DATES;
 
     private static final String VALID_TITLE = "a valid title";
@@ -102,7 +106,11 @@ class GoogleCalendarInviteUrlTest {
         final GoogleCalendarInviteUrl googleCalendarInviteUrl = minimalValidInstance();
         googleCalendarInviteUrl.setDescription(VALID_DESCRIPTION);
 
-        final String expectedUrl = buildUrl(VALID_TITLE_QUERYPARAM, VALID_DATES_QUERYPARAM, VALID_DESCRIPTION_QUERYPARAM);
+        final String expectedUrl = buildUrl(
+                VALID_TITLE_QUERYPARAM,
+                VALID_DATES_QUERYPARAM,
+                VALID_DESCRIPTION_QUERYPARAM
+        );
         final String actualUrl = googleCalendarInviteUrl.generateUrl();
         assertEquals(expectedUrl, actualUrl);
     }
@@ -112,7 +120,11 @@ class GoogleCalendarInviteUrlTest {
         final GoogleCalendarInviteUrl googleCalendarInviteUrl = minimalValidInstance();
         googleCalendarInviteUrl.addGuestInviteEmailAddress(VALID_EMAIL_ADDRESS_ONE);
 
-        final String expectedUrl = buildUrl(VALID_TITLE_QUERYPARAM, VALID_DATES_QUERYPARAM, VALID_INVITED_EMAIL_ONE_QUERYPARAM);
+        final String expectedUrl = buildUrl(
+                VALID_TITLE_QUERYPARAM,
+                VALID_DATES_QUERYPARAM,
+                VALID_INVITED_EMAIL_ONE_QUERYPARAM
+        );
         final String actualUrl = googleCalendarInviteUrl.generateUrl();
         assertEquals(expectedUrl, actualUrl);
     }
