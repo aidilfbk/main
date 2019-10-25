@@ -3,8 +3,10 @@ package seedu.address.model;
 import java.awt.Desktop;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.util.HashSet;
 import java.util.Locale;
 import java.util.Random;
+import java.util.Set;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -31,10 +33,10 @@ import seedu.address.storage.JsonTimeBookStorage;
  */
 class TestDataGeneratorUtil {
     private static final Path savePath = Path.of("data/timebook-generated.json");
-    private static final int numberOfPeople = 1000;
+    private static final int targetNumPeople = 1000;
     private static final int maxPerGroup = 6;
 
-    private static final Random random = new Random(0);
+    private static final Random random = new Random(2103);
     private static final Faker faker = new Faker(new Locale("en-SG"), random);
 
     /**
@@ -48,67 +50,31 @@ class TestDataGeneratorUtil {
         final GroupList groupList = new GroupList();
         final PersonToGroupMappingList personGroupMapping = new PersonToGroupMappingList();
 
-        final int numGroups = faker.number().numberBetween(numberOfPeople / maxPerGroup, numberOfPeople / 2);
+        final Set<String> usedPersonNames = new HashSet<>();
 
-        for (int i = 0; i < numGroups; i++) {
-            final GroupDescriptor groupDescriptor = new GroupDescriptor();
-            String name;
-            switch (faker.number().numberBetween(0, 11)) {
-            case 0:
-                name = faker.space().constellation();
-                break;
-            case 1:
-                name = faker.space().galaxy();
-                break;
-            case 2:
-                name = faker.space().meteorite();
-                break;
-            case 3:
-                name = faker.space().moon();
-                break;
-            case 4:
-                name = faker.space().nebula();
-                break;
-            case 5:
-                name = faker.space().star();
-                break;
-            case 6:
-                name = faker.space().starCluster();
-                break;
-            case 7:
-                name = faker.ancient().god();
-                break;
-            case 8:
-                name = faker.ancient().hero();
-                break;
-            case 9:
-                name = faker.ancient().primordial();
-                break;
-            case 10:
-                name = faker.ancient().titan();
-                break;
-            default:
-                name = null;
-            }
-            assert name != null;
-
-            groupDescriptor.setGroupName(new GroupName(name));
-
-            groupList.addGroup(groupDescriptor);
-        }
-
-        for (int i = 0; i < 1000; i++) {
+        for (int i = 0; i < targetNumPeople; i++) {
             final PersonDescriptor personDescriptor = new PersonDescriptor();
 
-            final String firstName = faker.name().firstName();
-            final String lastName = faker.name().lastName();
-            final String fullName = StringUtils.joinWith(" ", firstName, lastName);
+            String fullName = null;
+            String username = null;
+            int nameGenerationTries = 0;
+            do {
+                final String firstName = faker.name().firstName();
+                final String lastName = faker.name().lastName();
+                fullName = StringUtils.joinWith(" ", firstName, lastName);
 
-            final String username = StringUtils.deleteWhitespace(StringUtils.join(
-                    firstName.replaceAll("'", "").toLowerCase(),
-                    ".",
-                    lastName.replaceAll("'", "").toLowerCase()
-            ));
+                username = StringUtils.deleteWhitespace(StringUtils.join(
+                        firstName.replaceAll("'", "").toLowerCase(),
+                        ".",
+                        lastName.replaceAll("'", "").toLowerCase()
+                ));
+                if (nameGenerationTries++ > 50) {
+                    throw new RuntimeException(
+                            "Tried 50 times in a row to generate a unique person name, "
+                                    + "seems like all of them have been used"
+                    );
+                }
+            } while (!usedPersonNames.add(fullName));
 
             personDescriptor.setName(new Name(fullName.replaceAll("[-]", " ")));
             if (faker.bool().bool()) {
@@ -159,10 +125,83 @@ class TestDataGeneratorUtil {
             personList.addPerson(personDescriptor);
         }
 
+        final int numPeople = personList.getPersons().size();
+
+        final int targetNumGroups = faker.number().numberBetween(numPeople / maxPerGroup, numPeople / 2);
+
+        final Set<String> usedGroupNames = new HashSet<>();
+
+        for (int i = 0; i < targetNumGroups; i++) {
+            final GroupDescriptor groupDescriptor = new GroupDescriptor();
+            String name;
+            int nameGenerationTries = 0;
+            do {
+                switch (faker.number().numberBetween(0, 14)) {
+                case 0:
+                    name = faker.space().constellation();
+                    break;
+                case 1:
+                    name = faker.space().galaxy();
+                    break;
+                case 2:
+                    name = faker.space().meteorite();
+                    break;
+                case 3:
+                    name = faker.space().moon();
+                    break;
+                case 4:
+                    name = faker.space().nebula();
+                    break;
+                case 5:
+                    name = faker.space().star();
+                    break;
+                case 6:
+                    name = faker.space().starCluster();
+                    break;
+                case 7:
+                    name = faker.ancient().god();
+                    break;
+                case 8:
+                    name = faker.ancient().hero();
+                    break;
+                case 9:
+                    name = faker.ancient().primordial();
+                    break;
+                case 10:
+                    name = faker.ancient().titan();
+                    break;
+                case 11:
+                    name = faker.app().name();
+                    break;
+                case 12:
+                    name = faker.esports().team();
+                    break;
+                case 13:
+                    name = faker.team().name();
+                    break;
+                default:
+                    name = null;
+                }
+                assert name != null;
+
+                if (nameGenerationTries++ > 50) {
+                    throw new RuntimeException(
+                            "Tried 50 times in a row to generate a unique group name, "
+                                    + "seems like all of them have been used"
+                    );
+                }
+            } while (!usedGroupNames.add(name));
+
+            groupDescriptor.setGroupName(new GroupName(name));
+            groupList.addGroup(groupDescriptor);
+        }
+
+        final int numGroups = groupList.getGroups().size();
+
         for (var group : groupList.getGroups()) {
             final int memberCount = faker.number().numberBetween(2, maxPerGroup + 1);
             for (int i = 0; i < memberCount; i++) {
-                final int personId = faker.number().numberBetween(0, numberOfPeople + 1);
+                final int personId = faker.number().numberBetween(0, numPeople + 1);
                 Role role = null;
                 PersonToGroupMapping mapping;
 
@@ -194,7 +233,12 @@ class TestDataGeneratorUtil {
         Desktop.getDesktop().browseFileDirectory(savePath.toFile());
 
         System.out.println(String.format(
-                "Generated data saved to %s.\nHopefully Windows Explorer/Finder is showing it right now...",
+                "%d people, %d groups and %d person-group mappings generated.\n\n"
+                        + "Data saved to %s.\n"
+                        + "Hopefully Windows Explorer/Finder is showing it right now...",
+                personList.getPersons().size(),
+                numGroups,
+                personGroupMapping.asUnmodifiableObservableList().size(),
                 savePath.toAbsolutePath().toString()
         ));
     }
