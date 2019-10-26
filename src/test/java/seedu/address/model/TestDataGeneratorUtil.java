@@ -4,9 +4,11 @@ import java.awt.Desktop;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Locale;
 import java.util.Random;
 import java.util.Set;
+import java.util.function.Supplier;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -131,60 +133,29 @@ class TestDataGeneratorUtil {
         final int targetNumGroups = faker.number().numberBetween(numPeople / maxPerGroup, numPeople / 2);
 
         final Set<String> usedGroupNames = new HashSet<>();
+        final List<Supplier<String>> groupNameSuppliers = List.of(
+                faker.space()::constellation,
+                faker.space()::galaxy,
+                faker.space()::meteorite,
+                faker.space()::moon,
+                faker.space()::nebula,
+                faker.space()::star,
+                faker.space()::starCluster,
+                faker.ancient()::god,
+                faker.ancient()::hero,
+                faker.ancient()::primordial,
+                faker.ancient()::titan,
+                faker.app()::name,
+                faker.esports()::team,
+                faker.team()::name
+        );
 
         for (int i = 0; i < targetNumGroups; i++) {
             final GroupDescriptor groupDescriptor = new GroupDescriptor();
             String name;
             int nameGenerationTries = 0;
             do {
-                switch (faker.number().numberBetween(0, 14)) {
-                case 0:
-                    name = faker.space().constellation();
-                    break;
-                case 1:
-                    name = faker.space().galaxy();
-                    break;
-                case 2:
-                    name = faker.space().meteorite();
-                    break;
-                case 3:
-                    name = faker.space().moon();
-                    break;
-                case 4:
-                    name = faker.space().nebula();
-                    break;
-                case 5:
-                    name = faker.space().star();
-                    break;
-                case 6:
-                    name = faker.space().starCluster();
-                    break;
-                case 7:
-                    name = faker.ancient().god();
-                    break;
-                case 8:
-                    name = faker.ancient().hero();
-                    break;
-                case 9:
-                    name = faker.ancient().primordial();
-                    break;
-                case 10:
-                    name = faker.ancient().titan();
-                    break;
-                case 11:
-                    name = faker.app().name();
-                    break;
-                case 12:
-                    name = faker.esports().team();
-                    break;
-                case 13:
-                    name = faker.team().name();
-                    break;
-                default:
-                    name = null;
-                }
-                assert name != null;
-
+                name = faker.options().nextElement(groupNameSuppliers).get();
                 if (nameGenerationTries++ > 50) {
                     throw new RuntimeException(
                             "Tried 50 times in a row to generate a unique group name, "
