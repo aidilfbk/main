@@ -15,6 +15,7 @@ import com.github.javafaker.Faker;
 import seedu.address.model.group.GroupDescriptor;
 import seedu.address.model.group.GroupList;
 import seedu.address.model.group.GroupName;
+import seedu.address.model.group.GroupRemark;
 import seedu.address.model.mapping.PersonToGroupMapping;
 import seedu.address.model.mapping.PersonToGroupMappingList;
 import seedu.address.model.mapping.Role;
@@ -193,6 +194,9 @@ class TestDataGeneratorUtil {
             } while (!usedGroupNames.add(name));
 
             groupDescriptor.setGroupName(new GroupName(name));
+            if (faker.bool().bool()) {
+                groupDescriptor.setGroupRemark(new GroupRemark(faker.company().catchPhrase()));
+            }
             groupList.addGroup(groupDescriptor);
         }
 
